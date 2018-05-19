@@ -33,14 +33,29 @@ DAO.prototype = {
         }
 
         this.model.findByIdAndRemove(id, function(err,doc){
-            self.retStr(err, "delete success:\n",  "insert error! \n" + JSON.stringify(err));
+            self.retStr(err, "delete success:\n",  "delete error! \n" + JSON.stringify(err));
 
             cb && cb(err);            
         })
     },
 
-    findAll: function(cb) {
-        this.model.find(function(err, docs) {
+    update: function(conditions, data, cb) {
+        var self = this;
+
+        this.model.update(conditions, data, function(err, doc) {
+            self.retStr(err, "update success:\n",  "update error! \n" + JSON.stringify(err));   
+
+            cb && cb(err);
+        });
+    },
+
+    find: function(data, cb) {
+        if(!cb) {
+            cb = data;
+            data = {};
+        }
+
+        this.model.find(data, function(err, docs) {
             cb && cb(err, docs);
         })
     },

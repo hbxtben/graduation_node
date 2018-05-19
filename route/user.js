@@ -6,12 +6,12 @@ var user = require("../app/user/index");
 router.get("/logout", user.logout);
 
 //用户登录
-// router.post("/doLogin", user.doLogin);
+router.get("/doLogin", user.doLogin);
 
 //用户注册
 router.get("/signin", user.signin);
 
-//用户登出
-// router.get("/logout", user.logout);
+//判断用户是否登录
+router.get("/isLogin", user.isLogin);
 
 module.exports = router;
