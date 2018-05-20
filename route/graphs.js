@@ -8,6 +8,6 @@ router.get("/getGraphDetail", graphs.getGraphDetail);
 
 router.get("/delGraphItem", graphs.delGraphItem);
 
-router.get("/saveGraphData", graphs.saveGraphData);
+router.post("/saveGraphData", graphs.saveGraphData);
 
 module.exports = router;

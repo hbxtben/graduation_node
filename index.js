@@ -9,18 +9,18 @@ var allRouter = require("./route");
 //数据库连接
 var connect = require("./core/db"); 
 
-//添加cookie和session
-app.use(cookieParser('userinfo'));
-app.use(session({
-    secret: 'userinfo',
-    resave: true,
-    saveUninitialized: true
-}))
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
+
+//添加cookie和session
+app.use(cookieParser('userInfo'));
+app.use(session({
+    secret: 'userInfo',
+    resave: true,
+    saveUninitialized: true
+}));
 
 //解决跨域
 app.all('*', function(req, res, next) {

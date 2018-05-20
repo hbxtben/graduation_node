@@ -4,13 +4,18 @@ var DAO = require("../../core/dao");
 var userDAO = new DAO(userModel);
 
 var user = {
-    logout: function(req, res) {
-        req.session.user = null;
-        res.send({ret: true, errmsg: ""});
-    },
+    // logout: function(req, res) {
+    //     req.session.destroy(function(err) {
+    //         if(!err) {
+    //             res.send({ret: true, errmsg: ""});
+    //         } else {
+    //             res.send({ret: false, errmsg: "session is wrong"});
+    //         }
+    //     });
+    // },
 
     signin: function(req, res) {
-        var data = req.query;
+        var data = req.body;
 
         if(data) {
             userDAO.find({username: data.username}, function(err, preData) {
@@ -19,10 +24,6 @@ var user = {
                     userDAO.insert(data, function(err, doc) {
                         var ret = !err;
                         
-                        if(ret) {
-                            //添加到session
-                            req.session.user = data;
-                        }
                         res.send({
                             ret: ret, 
                             data: {
@@ -43,7 +44,7 @@ var user = {
     },
 
     doLogin: function(req, res) {
-        var data = req.query;
+        var data = req.body;
 
         if(data) {
             userDAO.find({
@@ -51,14 +52,13 @@ var user = {
                 password: data.password
             }, function(err, docs) {
                 if(!err && docs.length != 0) {
-                    //添加到session
-                    req.session.user = data;
+                    var userInfo = docs[0];
 
                     res.send({
                         ret: true, 
                         data: {
-                            username: data.username,
-                            nickname: data.nickname
+                            username: userInfo.username,
+                            nickname: userInfo.nickname
                         },
                         errmsg: ""
                     });
@@ -71,24 +71,26 @@ var user = {
         }
     },
 
-    isLogin: function(req, res) {
-        var data = req.session.user,
-            result = {};
-        if(data) {
-            result = {
-                ret: true,
-                data: {
-                    username: data.username,
-                    nickname: data.nickname
-                },
-                errmsg: ""
-            };
-        } else {
-            result = {ret: false, errmsg: ""}
-        }
+    // isLogin: function(req, res) {
+    //     var data = req.session.user,
+    //         result = {};
+        
+    //     console.log("isLogin session:,", req.session);
+    //     if(data) {
+    //         result = {
+    //             ret: true,
+    //             data: {
+    //                 username: data.username,
+    //                 nickname: data.nickname
+    //             },
+    //             errmsg: ""
+    //         };
+    //     } else {
+    //         result = {ret: false, errmsg: ""}
+    //     }
 
-        res.send(result);
-    }
+    //     res.send(result);
+    // }
 }
 
 module.exports = user;

@@ -5,9 +5,29 @@ var graphDAO = new DAO(graphModel);
 
 var graphs = {
     getGraphList: function(req, res) {
-        graphDAO.find(function(err, doc) {
+        var data = req.query,
+            pageNum = data.pageNum,
+            pageSize = data.pageSize;
+
+        graphDAO.devideFind({
+            limit: pageSize,
+            curPage: pageNum
+        }, function(err, docs) {
             if(!err) {
-                res.send({ret: true, data: doc, errmsg: ""});
+                graphDAO.getCount(function(err, num) {
+                    if(!err) {
+                        res.send({
+                            ret: true, 
+                            data: {
+                                list: docs,
+                                dataSize: num
+                            },
+                            errmsg: ""
+                        })
+                    } else {
+                        res.send({ret: false, errmsg: err});                
+                    }
+                })
             } else {
                 res.send({ret: false, errmsg: err});
             }
@@ -15,12 +35,17 @@ var graphs = {
     },
 
     saveGraphData: function(req, res) {
-        var data = req.query;
+        var data = req.body.params;
+        
+        data.options = JSON.stringify(data.options);
+        data.data = JSON.stringify(data.data);
+
         //编辑并保存以前的数据
-        if(data.id) {
+        if(data._id) {
             console.log("update", data);
+
             graphDAO.update({
-                _id: data.id
+                _id: data._id
             }, data, function(err) {
                 var ret = !err;
 
@@ -28,9 +53,9 @@ var graphs = {
             })
         } else {
         //添加新的图表数据
-            delete data.id;
-            console.log("insert", data);
+            delete data._id;
 
+            console.log("insert", data);
             graphDAO.insert(data, function(err) {
                 var ret = !err;
 
@@ -43,22 +68,22 @@ var graphs = {
     delGraphItem: function(req, res) {
         var data = req.query;
 
-        if(data.id) {
-            graphDAO.delete(data.id, function(err) {
+        if(data._id) {
+            graphDAO.delete(data._id, function(err) {
                 var ret = !err;
 
                 res.send({ret: ret, errmsg: err}); 
             }); 
         } else {
-            res.send({ret: false, errmsg: "there is not id to find graph"});
+            res.send({ret: false, errmsg: "there is not id to find graph and delete"});
         }
     },
 
     getGraphDetail: function(req, res) {
         var data = req.query;
 
-        if(data.id) {
-            graphDAO.find({ _id: data.id }, function(err, doc) {
+        if(data._id) {
+            graphDAO.find({ _id: data._id }, function(err, doc) {
                 var ret = !err;
 
                 res.send({ret: ret, data: doc, errmsg: err}); 
