@@ -7,11 +7,15 @@ var graphs = {
     getGraphList: function(req, res) {
         var data = req.query,
             pageNum = data.pageNum,
-            pageSize = data.pageSize;
+            pageSize = data.pageSize,
+            username = data.username;
 
         graphDAO.devideFind({
             limit: pageSize,
-            curPage: pageNum
+            curPage: pageNum,
+            condition: {
+                username: username
+            }
         }, function(err, docs) {
             if(!err) {
                 graphDAO.getCount(function(err, num) {
@@ -36,7 +40,7 @@ var graphs = {
 
     saveGraphData: function(req, res) {
         var data = req.body.params;
-        
+
         data.options = JSON.stringify(data.options);
         data.data = JSON.stringify(data.data);
 

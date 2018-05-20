@@ -72,7 +72,7 @@ DAO.prototype = {
 
         if(limitNum && curPage) {
             this.model
-            .find()
+            .find(opt.condition || {})
             .skip((curPage-1) * limitNum)
             .limit(limitNum)
             .exec(function(err, docs) {
