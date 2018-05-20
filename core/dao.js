@@ -60,8 +60,15 @@ DAO.prototype = {
         })
     },
 
-    getCount: function(cb) {
-        this.model.find().count(function(err, num) {
+    getCount: function(opt, cb) {
+        if(!cb) {
+            cb = opt;
+            opt = {};
+        }
+
+        this.model
+        .find(opt)
+        .count(function(err, num) {
             cb && cb(err, num);
         })
     },

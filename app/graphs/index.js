@@ -17,8 +17,11 @@ var graphs = {
                 username: username
             }
         }, function(err, docs) {
+            console.log("list:", docs);
             if(!err) {
-                graphDAO.getCount(function(err, num) {
+                graphDAO.getCount({
+                    username: username
+                },function(err, num) {
                     if(!err) {
                         res.send({
                             ret: true, 
