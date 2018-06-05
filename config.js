@@ -3,7 +3,7 @@ var config = {
     dbConfig: {
         db: "DataGraphs",
         user: "zhangzipeng",
-        pwd: "20145555",
+        pwd: "123456",
         domain: "localhost"
     }
 }
